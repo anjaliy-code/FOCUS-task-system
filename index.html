@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FOCUS — Task & Follow-Up System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="logo">
+      <h1>FOCUS</h1>
+      <span>Task & Follow-up System</span>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Views</div>
+      <div class="nav-item active" onclick="showView('dashboard')">
+        <span>◈</span> Today's Dashboard
+      </div>
+      <div class="nav-item" onclick="showView('all-tasks')">
+        <span>≡</span> All Tasks
+        <span class="count" id="nav-all-count">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('followups')">
+        <span>↩</span> Follow-Ups
+        <span class="count" id="nav-followup-count">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('overdue')">
+        <span>⚠</span> Overdue
+        <span class="count has-alert" id="nav-overdue-count">0</span>
+      </div>
+    </div>
+
+    <div class="nav-section" style="margin-top: 16px;">
+      <div class="nav-label">Filter by Status</div>
+      <div class="nav-item" onclick="filterByStatus('In Progress')"><span>▶</span> In Progress</div>
+      <div class="nav-item" onclick="filterByStatus('Waiting')"><span>⏸</span> Waiting</div>
+      <div class="nav-item" onclick="filterByStatus('Not Started')"><span>○</span> Not Started</div>
+      <div class="nav-item" onclick="filterByStatus('Done')"><span>✓</span> Done</div>
+    </div>
+
+    <div style="padding: 20px; margin-top: 16px; border-top: 1px solid var(--border);">
+      <div class="today-date">
+        <span>Today</span>
+        <strong id="today-display"></strong>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- DASHBOARD VIEW -->
+    <div id="view-dashboard" class="view active">
+      <div class="top-bar">
+        <h2>Good <strong id="greeting-time">morning</strong> — here's your day</h2>
+        <button class="btn" onclick="openAddModal()">+ New Task</button>
+      </div>
+      <div style="padding: 28px 32px;">
+
+        <div id="overdue-banner" class="alert-banner" style="display:none;">
+          <span>⚠</span>
+          <div><strong id="overdue-count-text">0 tasks overdue</strong> <span>— these need immediate attention</span></div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="stat-card urgent">
+            <div class="label">Overdue</div>
+            <div class="value" id="stat-overdue">0</div>
+          </div>
+          <div class="stat-card today">
+            <div class="label">Due Today</div>
+            <div class="value" id="stat-today">0</div>
+          </div>
+          <div class="stat-card done">
+            <div class="label">Completed</div>
+            <div class="value" id="stat-done">0</div>
+          </div>
+        </div>
+
+        <div class="task-list" id="dash-overdue-list">
+          <div class="section-header">
+            <div class="section-title red">Overdue — Act Now</div>
+          </div>
+        </div>
+
+        <div class="task-list" id="dash-today-list">
+          <div class="section-header">
+            <div class="section-title orange">Due Today</div>
+          </div>
+        </div>
+
+        <div class="task-list" id="dash-upcoming-list">
+          <div class="section-header">
+            <div class="section-title">Upcoming This Week</div>
+          </div>
+        </div>
+
+        <div class="task-list" id="dash-followup-list">
+          <div class="section-header">
+            <div class="section-title">Follow-Ups Pending</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ALL TASKS VIEW -->
+    <div id="view-all-tasks" class="view">
+      <div class="top-bar">
+        <h2><strong>All Tasks</strong></h2>
+        <button class="btn" onclick="openAddModal()">+ New Task</button>
+      </div>
+      <div style="padding: 28px 32px;">
+        <div class="filter-bar" id="filter-bar">
+          <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+          <button class="filter-btn" onclick="setFilter('Not Started', this)">Not Started</button>
+          <button class="filter-btn" onclick="setFilter('In Progress', this)">In Progress</button>
+          <button class="filter-btn" onclick="setFilter('Waiting', this)">Waiting</button>
+          <button class="filter-btn" onclick="setFilter('Done', this)">Done</button>
+        </div>
+        <div id="all-tasks-list"></div>
+      </div>
+    </div>
+
+    <!-- FOLLOW-UPS VIEW -->
+    <div id="view-followups" class="view">
+      <div class="top-bar">
+        <h2><strong>Follow-Ups</strong> <span style="color:var(--text3); font-size:14px;">— tasks awaiting a response</span></h2>
+        <button class="btn" onclick="openAddModal()">+ New Task</button>
+      </div>
+      <div style="padding: 28px 32px;">
+        <div id="followup-list"></div>
+      </div>
+    </div>
+
+    <!-- OVERDUE VIEW -->
+    <div id="view-overdue" class="view">
+      <div class="top-bar">
+        <h2><strong style="color:var(--red)">Overdue Tasks</strong></h2>
+        <button class="btn" onclick="openAddModal()">+ New Task</button>
+      </div>
+      <div style="padding: 28px 32px;">
+        <div id="overdue-list"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">New Task</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id">
+
+      <div class="form-row">
+        <label class="form-label">Task Name *</label>
+        <input type="text" class="form-input" id="f-name" placeholder="What needs to be done?">
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" id="f-desc" placeholder="Additional context, notes, links..."></textarea>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-row" style="margin-bottom:0">
+          <label class="form-label">Priority</label>
+          <select class="form-select" id="f-priority">
+            <option value="Critical">🔴 Critical</option>
+            <option value="High">🟠 High</option>
+            <option value="Medium" selected>🔵 Medium</option>
+            <option value="Low">⚪ Low</option>
+          </select>
+        </div>
+        <div class="form-row" style="margin-bottom:0">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="f-status">
+            <option value="Not Started">Not Started</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Waiting">Waiting</option>
+            <option value="Done">Done</option>
+          </select>
+        </div>
+      </div>
+      <br>
+
+      <div class="form-row-2">
+        <div class="form-row" style="margin-bottom:0">
+          <label class="form-label">Deadline *</label>
+          <input type="date" class="form-input" id="f-deadline">
+        </div>
+        <div class="form-row" style="margin-bottom:0">
+          <label class="form-label">Follow-Up Date</label>
+          <input type="date" class="form-input" id="f-followup">
+        </div>
+      </div>
+      <br>
+
+      <div class="form-row-2">
+        <div class="form-row" style="margin-bottom:0">
+          <label class="form-label">Assigned To</label>
+          <input type="text" class="form-input" id="f-assigned" placeholder="Name or team">
+        </div>
+        <div class="form-row" style="margin-bottom:0">
+          <label class="form-label">Category / Project</label>
+          <input type="text" class="form-input" id="f-category" placeholder="e.g. Marketing, Dev">
+        </div>
+      </div>
+      <br>
+
+      <div class="form-row-2">
+        <div class="form-row" style="margin-bottom:0">
+          <label class="form-label">Recurring</label>
+          <select class="form-select" id="f-recurring">
+            <option value="none">None</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="biweekly">Bi-weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+        <div class="form-row" style="margin-bottom:0">
+          <label class="form-label">Notes / Next Action</label>
+          <input type="text" class="form-input" id="f-notes" placeholder="Next step...">
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button id="delete-btn" class="btn btn-ghost btn-sm" onclick="deleteTask()" style="display:none; color:var(--red); border-color: var(--red);">Delete</button>
+      <button class="btn" onclick="saveTask()">Save Task</button>
+    </div>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
