@@ -38,5 +38,5 @@ focus-task-system/
 
 ## 👨‍💻 Author
 
-Your Name  
+Anjali Yadav 
 GitHub: https://github.com/anjaliy-code
