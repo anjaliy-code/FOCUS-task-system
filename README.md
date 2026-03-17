@@ -1,11 +1,11 @@
-# FOCUS — Task & Follow-Up System
+FOCUS — Task & Follow-Up System
 
 A clean, minimalist task management system built using pure HTML, CSS, and Vanilla JavaScript.
 
 Designed for productivity, clarity, and simplicity.
 
 
-## ✨ Features
+✨ Features
 
 - Dashboard overview
 - Overdue task detection
@@ -20,7 +20,7 @@ Designed for productivity, clarity, and simplicity.
 
 ---
 
-## 🛠 Tech Stack
+🛠 Tech Stack
 
 - HTML5
 - CSS3 (Custom properties + Grid layout)
@@ -29,7 +29,7 @@ Designed for productivity, clarity, and simplicity.
 
 ---
 
-## 📂 Project Structure
+📂 Project Structure
 focus-task-system/
 │── index.html
 │── styles.css
